@@ -1,0 +1,14 @@
+---
+- name: ajout d'un user
+  user:
+    name: "{{ user }}"
+    state: present
+    comment: "Tacha Natacha"
+    shell: /bin/sh
+- name: utilisation key
+  authorized_key: 
+    user: "{{ user }}" 
+    state: present
+    key: "{{ lookup( 'file', '/home/{{ user }}/.ssh/id_rsa.pub') }}"
+
+

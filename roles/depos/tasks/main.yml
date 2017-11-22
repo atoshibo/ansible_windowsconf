@@ -1,0 +1,36 @@
+---
+- name: Ajouter un dépos debian
+  apt_repository:
+    repo: "{{ item }}"
+  with_items:
+    - deb http://packages.dotdeb.org jessie all
+    - deb-src http://packages.dotdeb.org jessie all
+- name: Ajouter un cle
+  apt_key:
+    url: https://www.dotdeb.org/dotdeb.gpg
+    state: present
+  notify: update
+- name: instalation php
+  apt:
+    name: "{{ php_packages }}"
+- name: ремпласушеч
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: 'post_max_size = '
+    line: 'post_max_size = {{ php_post_max_size }}'
+- name: ремпласушеч
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: 'upload_max_filesize = '
+    line: 'upload_max_filesize = {{ php_upload_max_filesize }}'
+- name: ремпласушеч
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: 'memory_limit = '
+    line: 'memory_limit = {{ php_memory_limit }}'
+- name: ремпласушеч
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: 'date.timezone ='
+    line: 'date.timezone = {{ php_timezone }}'
+  notify: php restart

@@ -1,0 +1,38 @@
+---
+- name: isntallation git et htop
+  hosts: windows
+  tasks:
+#  - name: creer un nouveau user
+#    win_domain_user:
+#      fullname: UnUsersuperCool
+#      groups: users
+#      name: MrCool
+#      password: 12345Pomme1
+#      state: present
+#      description: un con de
+  - name: create a directory sources
+    win_file:
+      path: c:\test\
+      state: directory
+  - name: create a directory dest
+    win_file:
+        path: c:\worle\
+        state: directory
+  - name: creer un fichier vide
+    win_file:
+      path: c:\test\application.ini
+      state: touch
+  - name: copier un fichier
+    win_copy:
+      src: c:\test\application.ini
+      dest: c:\worle\application.ini
+      remote_src: True
+  roles:
+  - hyperv
+
+#  - name: instalation firefox
+#    win_package:
+#      path: \\10.0.0.1\wrole\FirefoxESR-38.3.0-fr.msi
+#      state: present
+#  - name: installation firefox * partage d'un fichier
+...

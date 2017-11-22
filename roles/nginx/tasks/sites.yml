@@ -1,0 +1,38 @@
+---
+- name: creation de repertoire item.domain
+  become: yes #pour marcitem.domainen tant que root si l'utilisateur est autre que root
+  file:
+    path: "/home/{{ user }}/{{ item.domain }}"
+    state: directory
+    owner: "{{ user }}"
+    mode: 0755
+- name: creation de lien
+  become: yes # pareille
+  file:
+    src: "/home/{{ user }}/{{ item.domain }}"
+    dest: "/var/www/html/{{ item.domain }}"
+    state: link
+- name: lancer une page dans nginx
+  template:
+    src: "templates/nginx.j2"
+    dest: "/etc/nginx/sites-available/{{ item.domain }}"
+- name: activation de site un autre lien nécessaire pour ça
+  file:
+    src: "/etc/nginx/sites-available/{{ item.domain }}"
+    dest: "/etc/nginx/sites-enabled/{{ item.domain }}"
+    state: link
+  notify: nginx
+
+- name: creation du dossier {{ item.domain }}
+  become: yes
+  when: item.repo is not defined
+  file: path=/home/{{ user }}/{{ item.domain }} state=directory owner={{ user }}
+- name: création de site
+  become: yes
+  when: item.repo is not defined
+  shell: echo '<html><p>Hello you, beach</p></html>' >> '/home/{{ user }}'/{{ item.domain }}/index.html
+
+- name: clonage du site {{ item.domain }}
+  become: yes
+  when: item.repo is defined
+  git: dest=/home/{{ user }}/{{ item.domain }} clone=yes repo={{ item.repo }}

@@ -1,0 +1,6 @@
+---
+- name: Installation HyperV sur AD
+  win_feature:
+    name: Hyper-V
+    state: present
+...

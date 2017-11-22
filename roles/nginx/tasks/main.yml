@@ -1,0 +1,16 @@
+---
+- name: update cache
+  apt: update_cache=true
+  become: true
+- name: instalatio de nginx
+  apt:
+    name: nginx
+    state: latest
+- name: supression de default
+  file:
+    path='/etc/nginx/sites-available/default'
+    state=absent
+- name: faire marcher les sites
+  include: sites.yml
+  with_items: "{{ domains }}"
+  notify: nginx

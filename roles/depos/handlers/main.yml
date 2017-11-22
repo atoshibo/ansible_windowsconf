@@ -1,0 +1,8 @@
+---
+- name: update
+  apt:
+    update_cache: yes
+- name: php restart
+  service:
+    name: php7.0-fpm
+    state: restarted
